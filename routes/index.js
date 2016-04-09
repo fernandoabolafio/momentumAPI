@@ -28,12 +28,12 @@ router.get('/authenticate', function(req, res, next) {
  console.log("REQUESTING FB TOKEN");
   var fbReq = https.request(options, function(fbRes) {
 
-    console.log("FB respondeu");
+    //console.log("FB respondeu");
 
     fbRes.on('data', function(data) {
       var jsonObject = JSON.parse(data);
 
-      console.log(jsonObject);
+      //console.log(jsonObject);
 
       User.findOne({
         fbId: jsonObject.id
@@ -56,8 +56,8 @@ router.get('/authenticate', function(req, res, next) {
 
           //TODO: return jwt token.
           console.log("CREATING TOKEN");
-          
-          var token = jwt.sign(user, "ronaldo", {} );
+
+          var token = jwt.sign(String(user._id), "ronaldo", {} );
           console.log(token);
           res.json({
             success: true,
@@ -77,6 +77,35 @@ router.get('/authenticate', function(req, res, next) {
     console.log(err);
   });
 
+});
+// verify token
+router.use(function(req,rest,next){
+  var token = req.query.token;
+  console.log("verify token: "+token);
+
+  if (token){
+    jwt.verify(token, "ronaldo", function(err, decoded){
+      if (err) {
+        return res.json({ success: false, message: "Failed to authenticate Token"})
+      }else {
+        User.findById(decoded, function(err, user) {
+          if(err) throw err;
+
+          if(!user) {
+            return res.json({ success: false, message: "Failed to authenticate Token"})
+          } else {
+            req.user = user;
+            next();
+          }
+        });
+      }
+    });
+  }else {
+    return res.status(403).send({
+      success: false,
+      message: "No token provided"
+    });
+  }
 });
 
 module.exports = router;
