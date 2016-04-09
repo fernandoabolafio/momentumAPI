@@ -11,8 +11,8 @@ var users = require('./routes/users');
 var app = express();
 
 var mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/momentum', function(err) {
+//https://sheltered-journey-91048.herokuapp.com
+mongoose.connect('mongodb:https://sheltered-journey-91048/momentum', function(err) {
   if(err) {
     console.log('connection error', err);
   } else {

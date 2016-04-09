@@ -25,11 +25,15 @@ router.get('/authenticate', function(req, res, next) {
     path: '/me?access_token='+fbToken,
     method: 'GET'
   };
-
+ console.log("REQUESTING FB TOKEN");
   var fbReq = https.request(options, function(fbRes) {
+
+    console.log("FB respondeu");
 
     fbRes.on('data', function(data) {
       var jsonObject = JSON.parse(data);
+
+      console.log(jsonObject);
 
       User.findOne({
         fbId: jsonObject.id
@@ -51,6 +55,8 @@ router.get('/authenticate', function(req, res, next) {
           console.log('Deu bom!');
 
           //TODO: return jwt token.
+          console.log("CREATING TOKEN");
+          
           var token = jwt.sign(user, "ronaldo", {} );
           console.log(token);
           res.json({
