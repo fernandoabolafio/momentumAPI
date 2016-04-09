@@ -12,7 +12,7 @@ var app = express();
 
 var mongoose = require('mongoose');
 //https://sheltered-journey-91048.herokuapp.com
-mongoose.connect('mongodb:https://sheltered-journey-91048/momentum', function(err) {
+mongoose.connect('mongodb://momentumDB:momentumDB123@ds021010.mlab.com:21010/momentum', function(err) {
   if(err) {
     console.log('connection error', err);
   } else {
