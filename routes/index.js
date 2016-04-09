@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 router.get('/authenticate', function(req, res, next) {
   //Pegar o token
   var fbToken = req.query.token;
-  
+
   //Pegar o fbId do token.
   var fbUrl = 'graph.facebook.com'
 
@@ -26,11 +26,11 @@ router.get('/authenticate', function(req, res, next) {
     method: 'GET'
   };
 
-  var httpsReq = https.request(options, function(res) {
-    
-    res.on('data', function(data) {
+  var fbReq = https.request(options, function(fbRes) {
+
+    fbRes.on('data', function(data) {
       var jsonObject = JSON.parse(data);
-      
+
       User.findOne({
         fbId: jsonObject.id
       }, function (err, user) {
@@ -43,7 +43,7 @@ router.get('/authenticate', function(req, res, next) {
             fbId: jsonObject.id,
           });
         }
-        
+
         user.fbToken = fbToken;
         user.save(function(err) {
           if(err) throw err;
@@ -51,6 +51,12 @@ router.get('/authenticate', function(req, res, next) {
           console.log('Deu bom!');
 
           //TODO: return jwt token.
+          var token = jwt.sign(user, "ronaldo", {} );
+          console.log(token);
+          res.json({
+            success: true,
+            message: "Enjoy your token!",
+            token: token });
         });
 
       });
@@ -59,9 +65,9 @@ router.get('/authenticate', function(req, res, next) {
 
   });
 
-  httpsReq.end();
+  fbReq.end();
 
-  httpsReq.on('error', function(err) {
+  fbReq.on('error', function(err) {
     console.log(err);
   });
 
