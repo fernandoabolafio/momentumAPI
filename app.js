@@ -5,12 +5,16 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+
 var routes = require('./routes/index');
 var albums = require('./routes/albums');
+var photos = require('./routes/photos');
+var AWS = require('aws-sdk'); 
 
 var app = express();
 
 var mongoose = require('mongoose');
+//testin aws
 //https://sheltered-journey-91048.herokuapp.com
 mongoose.connect('mongodb://momentumDB:momentumDB123@ds021010.mlab.com:21010/momentum', function(err) {
   if(err) {
@@ -35,6 +39,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 
 app.use('/albums', albums);
+app.use('/photos', photos);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

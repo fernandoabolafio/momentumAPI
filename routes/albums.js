@@ -1,6 +1,8 @@
 var express = require('express');
 var Album = require('../models/album-model');
+
 var router = express.Router();
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
