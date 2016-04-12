@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var albums = require('./routes/albums');
 var photos = require('./routes/photos');
-
+var AWS = require('aws-sdk'); 
 
 var app = express();
 
